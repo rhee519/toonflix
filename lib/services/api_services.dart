@@ -5,12 +5,18 @@ import "package:http/http.dart" as http;
 import "package:toonflix/models/webtoon_model.dart";
 
 class ApiService {
-  final String baseUrl = "https://webtoon-crawler.nomadcoders.workers.dev";
-  final String TODAY = "today";
+  static const headers = {
+    "User-Agent":
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"
+  };
 
-  Future<List<WebtoonModel>> getTodayWebtoonList() async {
+  static const String baseUrl =
+      "https://webtoon-crawler.nomadcoders.workers.dev";
+  static const String TODAY = "today";
+
+  static Future<List<WebtoonModel>> getTodayWebtoonList() async {
     final url = Uri.parse("$baseUrl/$TODAY");
-    final response = await http.get(url);
+    final response = await http.get(url, headers: headers);
     if (response.statusCode != HttpStatus.ok) {
       throw Error();
     }
@@ -23,5 +29,5 @@ class ApiService {
 }
 
 void main(List<String> args) {
-  ApiService().getTodayWebtoonList();
+  ApiService.getTodayWebtoonList();
 }
