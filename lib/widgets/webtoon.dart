@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:toonflix/models/webtoon.dart';
+import 'package:toonflix/screens/detail_screen.dart';
 import 'package:toonflix/services/api_services.dart';
 
 class Webtoon extends StatelessWidget {
@@ -12,36 +13,49 @@ class Webtoon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          width: 250,
-          clipBehavior: Clip.hardEdge,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              boxShadow: [
-                BoxShadow(
-                  blurRadius: 15,
-                  offset: const Offset(10, 10),
-                  color: Colors.black.withOpacity(0.3),
-                )
-              ]),
-          child: Image.network(
-            webtoon.thumb,
-            headers: ApiService.headers,
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => DetailScreen(webtoon: webtoon),
+              fullscreenDialog: true,
+            ));
+      },
+      child: Column(
+        children: [
+          Hero(
+            tag: webtoon.id,
+            child: Container(
+              width: 250,
+              clipBehavior: Clip.hardEdge,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
+                    BoxShadow(
+                      blurRadius: 15,
+                      offset: const Offset(10, 10),
+                      color: Colors.black.withOpacity(0.3),
+                    )
+                  ]),
+              child: Image.network(
+                webtoon.thumb,
+                headers: ApiService.headers,
+              ),
+            ),
           ),
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        Text(
-          webtoon.title,
-          style: const TextStyle(
-            fontSize: 22,
-            // fontWeight: FontWeight.w600,
+          const SizedBox(
+            height: 10,
           ),
-        ),
-      ],
+          Text(
+            webtoon.title,
+            style: const TextStyle(
+              fontSize: 22,
+              // fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
