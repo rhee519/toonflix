@@ -3,6 +3,8 @@ import "dart:io";
 
 import "package:http/http.dart" as http;
 import 'package:toonflix/models/webtoon.dart';
+import "package:toonflix/models/webtoon_detail.dart";
+import "package:toonflix/models/webtoon_episode.dart";
 
 class ApiService {
   static const headers = {
@@ -26,8 +28,34 @@ class ApiService {
         webtoons.map((json) => WebtoonModel.fromJson(json)).toList();
     return webtoonList;
   }
+
+  static Future<WebtoonDetailModel> getDetailById(String id) async {
+    final url = Uri.parse("$baseUrl/$id");
+    final response = await http.get(url, headers: headers);
+    if (response.statusCode != HttpStatus.ok) {
+      throw Error();
+    }
+
+    return WebtoonDetailModel.fromJson(jsonDecode(response.body));
+  }
+
+  static Future<List<WebtoonEpisodeModel>> getLatestEpisodesById(
+      String id) async {
+    final url = Uri.parse("$baseUrl/$id/episodes");
+    final response = await http.get(url, headers: headers);
+    if (response.statusCode != HttpStatus.ok) {
+      throw Error();
+    }
+
+    final List<dynamic> episodes = jsonDecode(response.body);
+    final List<WebtoonEpisodeModel> episodeList =
+        episodes.map((ep) => WebtoonEpisodeModel.fromJson(ep)).toList();
+    return episodeList;
+  }
 }
 
 void main(List<String> args) {
-  ApiService.getTodayWebtoonList();
+  ApiService.getTodayWebtoonList()
+      .then((webtoons) => ApiService.getLatestEpisodesById(webtoons[0].id))
+      .then((value) => print(value));
 }
