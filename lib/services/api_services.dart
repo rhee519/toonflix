@@ -2,7 +2,7 @@ import "dart:convert";
 import "dart:io";
 
 import "package:http/http.dart" as http;
-import "package:toonflix/models/webtoon_model.dart";
+import 'package:toonflix/models/webtoon.dart';
 
 class ApiService {
   static const headers = {
